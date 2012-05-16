@@ -22,6 +22,18 @@ end
 
 gem 'jquery-rails'
 
+
+#testing gems
+group :test,:development do
+
+  gem 'factory_girl_rails'
+  gem 'rspec-rails'
+  gem 'guard-rspec'
+  gem 'rb-inotify'
+  gem 'capybara', :git => 'git://github.com/jnicklas/capybara.git'
+end
+
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
