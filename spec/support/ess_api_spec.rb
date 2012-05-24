@@ -7,7 +7,7 @@ describe "ESS API" do
   end
 
  it "should return valid OAuth token" do
-   @consumer = ESSServerAPI.connect_server
+   @consumer = ESSServerAPI.connect_server("rooms/")
    @consumer.should_not be_nil 
   end
 
@@ -19,5 +19,10 @@ describe "ESS API" do
  it "should get a room list" do
    rooms = ESSServerAPI.get_room_list
    rooms.should_not be_nil
+ end
+ 
+ it "should return a room list with length greater than zero" do
+   rooms = ESSServerAPI.get_room_list
+   rooms.size.should be > 0
  end 
 end

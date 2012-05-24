@@ -21,8 +21,8 @@ group :assets do
 end
 
 gem 'jquery-rails'
-gem 'oauth'
-gem 'rest-client'
+gem 'oauth-plugin'
+gem 'typhoeus'
 #testing gems
 group :test,:development do
 
