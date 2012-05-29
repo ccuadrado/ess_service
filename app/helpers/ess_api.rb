@@ -22,7 +22,7 @@ module ESSServerAPI
     req.headers.merge!({"Authorization" => oauth_helper.header})
     hydra.queue(req)
     hydra.run
-    req.response.body
+    puts req.response.body
   end
 
   def self.passwords_file
@@ -35,6 +35,22 @@ module ESSServerAPI
   
   def self.base_url
     'https://128.164.60.181:8443/ess/scheduleapi/v1/'
+  end
+   
+  def self.device_base_url
+   "https://128.164.63.25:8443/"
+  end
+ 
+  def self.start_capture
+   oauth_creds = YAML.load_file(passwords_file)
+   auth = oauth_creds["deviceauthentication"]
+   key = oauth_creds["devicekey"]
+   hydra = Typhoeus::Hydra.new
+   uri = device_base_url + "capture/new_capture"
+   req = Typhoeus::Request.new(uri,:method => :post, :headers => {"Authorization" => "#{auth} #{key}"}, :disable_ssl_peer_verification => true, :disable_ssl_host_verification => true, :params => {:description => "Test Capture for API",:duration => 240, :capture_profile_name => "Upgraded Product Group 1"})
+   hydra.queue(req)
+   hydra.run
+   puts req.response.body
   end
 
 end

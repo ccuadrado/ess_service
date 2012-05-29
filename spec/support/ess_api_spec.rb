@@ -25,4 +25,5 @@ describe "ESS API" do
    rooms = ESSServerAPI.get_room_list
    rooms.size.should be > 0
  end 
-end
+
+ end
