@@ -52,5 +52,17 @@ module ESSServerAPI
    hydra.run
    puts req.response.body
   end
+  
 
+  def self.capture_status
+    oauth_creds = YAML.load_file(passwords_file)
+    auth = oauth_creds["deviceauthentication"]
+    key = oauth_creds["devicekey"]
+    hydra = Typhoeus::Hydra.new
+    uri = device_base_url + "status/system"
+    req = Typhoeus::Request.new(uri,:method => :get, :headers => {"Authorization" => "#{auth} #{key}"},:disable_ssl_peer_verification => true, :disable_ssl_host_verification => true)
+    hydra.queue(req)
+    hydra.run
+    req.response.body
+  end
 end

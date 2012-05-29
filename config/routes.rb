@@ -1,4 +1,8 @@
 EssService::Application.routes.draw do
+  match "/requests/status" => "requests#status"
+  match "/requests/record" => "requests#record"
+  resources :requests
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
