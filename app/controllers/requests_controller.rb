@@ -5,7 +5,8 @@ class RequestsController < ActionController::Base
   end
 
   def record
-    ESSServerAPI.start_capture
+    @name = params[:name]
+    ESSServerAPI.start_capture(@name)
     render :text => "OK" 
   end
 end

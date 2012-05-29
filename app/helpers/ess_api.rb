@@ -41,13 +41,13 @@ module ESSServerAPI
    "https://128.164.63.25:8443/"
   end
  
-  def self.start_capture
+  def self.start_capture(name)
    oauth_creds = YAML.load_file(passwords_file)
    auth = oauth_creds["deviceauthentication"]
    key = oauth_creds["devicekey"]
    hydra = Typhoeus::Hydra.new
    uri = device_base_url + "capture/new_capture"
-   req = Typhoeus::Request.new(uri,:method => :post, :headers => {"Authorization" => "#{auth} #{key}"}, :disable_ssl_peer_verification => true, :disable_ssl_host_verification => true, :params => {:description => "Test Capture for API",:duration => 240, :capture_profile_name => "Upgraded Product Group 1"})
+   req = Typhoeus::Request.new(uri,:method => :post, :headers => {"Authorization" => "#{auth} #{key}"}, :disable_ssl_peer_verification => true, :disable_ssl_host_verification => true, :params => {:description => name,:duration => 240, :capture_profile_name => "Upgraded Product Group 1"})
    hydra.queue(req)
    hydra.run
    puts req.response.body
