@@ -24,7 +24,16 @@ module ESSServerAPI
     hydra.run
     puts req.response.body
   end
+  
+  def self.load_credentials(type)
+    creds = YAML.load_file(passwords_file)
+    if type == :server   
+      {"key" => creds["key"], "secret" => creds["secret"]}
+    else 
+      {"deviceauthentication" => creds["deviceauthentication"], "devicekey" => creds["devicekey"]}
+    end
 
+  end
   def self.passwords_file
     File.expand_path(File.join(File.dirname(__FILE__),"passwords.yaml"))
   end
@@ -41,28 +50,27 @@ module ESSServerAPI
    "https://128.164.63.25:8443/"
   end
  
-  def self.start_capture(name)
-   oauth_creds = YAML.load_file(passwords_file)
+  def self.send_device_request(resource,params = {})
+   oauth_creds = load_credentials :device
    auth = oauth_creds["deviceauthentication"]
    key = oauth_creds["devicekey"]
    hydra = Typhoeus::Hydra.new
-   uri = device_base_url + "capture/new_capture"
-   req = Typhoeus::Request.new(uri,:method => :post, :headers => {"Authorization" => "#{auth} #{key}"}, :disable_ssl_peer_verification => true, :disable_ssl_host_verification => true, :params => {:description => name,:duration => 240, :capture_profile_name => "Upgraded Product Group 1"})
+   uri = device_base_url + resource
+   req = Typhoeus::Request.new(uri,:method => :post, :headers => {"Authorization" => "#{auth} #{key}"}, :disable_ssl_peer_verification => true, :disable_ssl_host_verification => true, :params => params)
    hydra.queue(req)
    hydra.run
-   puts req.response.body
+   req.response.body
+
+  end
+  def self.start_capture(name = 'Test Capture', duration=240, capture_profile_name = "Upgraded Product Group 1")
+    params = {:description => name, :duration => duration, :capture_profile_name => capture_profile_name}
+    resource = "capture/new_capture"
+    send_device_request(resource,params)
   end
   
 
   def self.capture_status
-    oauth_creds = YAML.load_file(passwords_file)
-    auth = oauth_creds["deviceauthentication"]
-    key = oauth_creds["devicekey"]
-    hydra = Typhoeus::Hydra.new
-    uri = device_base_url + "status/system"
-    req = Typhoeus::Request.new(uri,:method => :get, :headers => {"Authorization" => "#{auth} #{key}"},:disable_ssl_peer_verification => true, :disable_ssl_host_verification => true)
-    hydra.queue(req)
-    hydra.run
-    req.response.body
+    resource = "status/system"
+    send_device_Request(resource)
   end
 end
