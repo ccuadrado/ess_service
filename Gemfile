@@ -23,6 +23,7 @@ end
 gem 'jquery-rails'
 gem 'oauth-plugin'
 gem 'typhoeus'
+gem 'libxml-ruby'
 #testing gems
 group :test,:development do
 
